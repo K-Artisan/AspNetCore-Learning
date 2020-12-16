@@ -1,0 +1,23 @@
+﻿@using Microsoft.AspNetCore.Authentication
+@using System;
+
+<h2>HttpContext.User.Claims</h2>
+
+<dl>
+    @foreach (var claim in User.Claims)
+    {
+    <dt>@claim.Type</dt>
+    <dd>@claim.Value</dd>
+    }
+</dl>
+
+<h2>AuthenticationProperties</h2>
+<p>now : @DateTime.UtcNow.ToString()<p />
+<dl>
+
+    @foreach (var prop in (await Context.AuthenticateAsync()).Properties.Items)
+    {
+    <dt>@prop.Key</dt>
+    <dd>@prop.Value</dd>
+    }
+</dl>
