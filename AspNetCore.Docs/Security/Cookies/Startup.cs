@@ -37,9 +37,9 @@ namespace Cookies
             services.AddAuthentication(AuthenticationScheme_Cookie) // Sets the default scheme to cookies
               .AddCookie(AuthenticationScheme_Cookie, options =>
               {
-                  options.AccessDeniedPath = "/account/denied";
-                  options.LoginPath = "/account/login";
-                  options.ExpireTimeSpan = TimeSpan.FromSeconds(60 * 1);
+                  options.AccessDeniedPath = "/Account/AccessDenied";
+                  options.LoginPath = "/Account/Login";
+                  options.ExpireTimeSpan = TimeSpan.FromSeconds(60 * 1); //Ä¬ÈÏ14Ìì£¿
                   //options.SlidingExpiration = true;
               });
         }

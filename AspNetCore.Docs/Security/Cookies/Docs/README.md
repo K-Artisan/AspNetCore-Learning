@@ -1,5 +1,6 @@
 # AuthSamples.Cookies
 =================
+Ô´ÂëµØÖ·£ºhttps://github.com/dotnet/aspnetcore/tree/release/3.1/src/Security/samples/Cookies
 
 Sample demonstrating cookie authentication:
 1. Run the app and click on the MyClaims tab, this should trigger a redirect to login.

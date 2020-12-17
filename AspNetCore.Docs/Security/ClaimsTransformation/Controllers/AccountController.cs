@@ -45,6 +45,7 @@ namespace ClaimsTransformation.Controllers
                     new Claim("role", "Member")
                 };
 
+                // 认证后的用户体现为一个`ClaimsPrincipal`对象
                 var claimsPrincipal = new ClaimsPrincipal(
                     new ClaimsIdentity(claims,
                         CookieAuthenticationDefaults.AuthenticationScheme,
