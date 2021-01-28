@@ -17,6 +17,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using AspNetCoreIdentity.Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
+using AspNetCoreIdentity.Infrastructure.Authorizations;
 
 namespace AspNetCoreIdentity
 {
@@ -108,22 +110,31 @@ namespace AspNetCoreIdentity
                 };
             });
 
-            /*-----------------------------------------------Authorization(授权)----------------------------------------------------
-            
-             */
+            #region Authorization(授权)
 
             services.AddAuthorization(options =>
             {
                 //基于Claim 的授权
-                options.AddPolicy("TrialOnly", policy => {
+                options.AddPolicy("TrialOnly", policy =>
+                {
                     policy.RequireClaim("Trial");
                 });
 
                 //基于角色的授权
-                options.AddPolicy("AdminOnly", policy => {
+                options.AddPolicy("AdminOnly", policy =>
+                {
                     policy.RequireRole("Admin");
                 });
             });
+
+
+            /*--------自定义授权策略-------
+              StreamingCategoryPolicyProvider
+             */
+            services.AddTransient<IAuthorizationPolicyProvider, StreamingCategoryPolicyProvider>();
+            // As always, handlers must be provided for the requirements of the authorization policies
+            services.AddTransient<IAuthorizationHandler, StreamingCategoryAuthorizationHandler>(); 
+            #endregion
         }
 
 

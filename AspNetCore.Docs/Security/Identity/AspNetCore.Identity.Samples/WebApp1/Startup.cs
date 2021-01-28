@@ -35,7 +35,7 @@ namespace WebApp1
             services.AddControllersWithViews();
             services.AddRazorPages();
 
-            #region ÃÌº”≈‰÷√
+            #region ÃÌº”Identity≈‰÷√
 
             services.Configure<IdentityOptions>(options =>
             {
