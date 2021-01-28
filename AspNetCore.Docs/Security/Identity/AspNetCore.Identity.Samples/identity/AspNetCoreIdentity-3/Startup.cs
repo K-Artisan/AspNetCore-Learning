@@ -112,28 +112,39 @@ namespace AspNetCoreIdentity
 
             #region Authorization(授权)
 
-            services.AddAuthorization(options =>
-            {
-                //基于Claim 的授权
-                options.AddPolicy("TrialOnly", policy =>
-                {
-                    policy.RequireClaim("Trial");
-                });
+            //services.AddAuthorization(options =>
+            //{
+            //    //基于Claim 的授权
+            //    options.AddPolicy("TrialOnly", policy =>
+            //    {
+            //        policy.RequireClaim("Trial");
+            //    });
 
-                //基于角色的授权
-                options.AddPolicy("AdminOnly", policy =>
-                {
-                    policy.RequireRole("Admin");
-                });
-            });
+            //    //基于角色的授权
+            //    options.AddPolicy("AdminOnly", policy =>
+            //    {
+            //        policy.RequireRole("Admin");
+            //    });
+            //});
 
 
             /*--------自定义授权策略-------
               StreamingCategoryPolicyProvider
              */
             services.AddTransient<IAuthorizationPolicyProvider, StreamingCategoryPolicyProvider>();
+            /*
+               说明 全局使用一个IAuthorizationPolicyProvider的实例
+               StreamingCategoryPolicyProvider2 覆盖 StreamingCategoryPolicyProvider，
+               而 StreamingCategoryPolicyProvider2 没用添加策略“TrialOnly”，
+               故访问添加策略权限‘TrialOnly’的页面‘/Streaming/Videos’,会抛出异常，
+               System.InvalidOperationException: The AuthorizationPolicy named: 'TrialOnly' was not found.
+            */
+            //services.AddTransient<IAuthorizationPolicyProvider, StreamingCategoryPolicyProvider2>();
+
             // As always, handlers must be provided for the requirements of the authorization policies
-            services.AddTransient<IAuthorizationHandler, StreamingCategoryAuthorizationHandler>(); 
+            services.AddTransient<IAuthorizationHandler, StreamingCategoryAuthorizationHandler>();
+            services.AddTransient<IAuthorizationHandler, UserCategoryAuthorizationHandler>();
+
             #endregion
         }
 

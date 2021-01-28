@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AspNetCoreIdentity.Infrastructure;
 using AspNetCoreIdentity.Infrastructure.Authorizations;
 using AspNetCoreIdentity.Infrastructure.Repository;
+using AspNetCoreIdentity.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +17,13 @@ namespace AspNetCoreIdentity.Controllers
     public class StreamingController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
+        public IAuthorizationService _authorizationService { get; }
 
-        public StreamingController(UserManager<IdentityUser> manager)
+
+        public StreamingController(UserManager<IdentityUser> manager, IAuthorizationService authorizationService)
         {
             _userManager = manager;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet]
@@ -88,6 +92,33 @@ namespace AspNetCoreIdentity.Controllers
 
             return Ok();
         }
+
+        /// <summary>
+        /// 用于演示：
+        /// 必须是已经声明了对应的类别对应Claim的用户才能添加这个类别的Video
+        /// </summary>
+        /// <param name="video"></param>
+        /// <returns></returns>
+
+        [HttpPost]
+        [Route("videos/add")]
+        [Authorize]
+        public async Task<IActionResult> AddVideo([FromBody] VideoVM video)
+        {
+            var authorizationResult = await _authorizationService
+                .AuthorizeAsync(User, video, "AddVideoPolicy");
+
+            if (authorizationResult.Succeeded)
+            {
+                VideoRepository.Videos.Add(video);
+                return Ok();
+            }
+            else
+            {
+                return new ForbidResult();
+            }
+        }
+
 
         #region Categories
 

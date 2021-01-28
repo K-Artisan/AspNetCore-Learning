@@ -55,7 +55,10 @@ namespace AspNetCoreIdentity.Infrastructure {
 
         public Task<AuthorizationPolicy> GetDefaultPolicyAsync () => FallbackPolicyProvider.GetDefaultPolicyAsync ();
 
-        public Task<AuthorizationPolicy> GetFallbackPolicyAsync() => FallbackPolicyProvider.GetDefaultPolicyAsync();
+
+        //特别注意啊，这里给的源码有误，
+        // public Task<AuthorizationPolicy> GetFallbackPolicyAsync() => FallbackPolicyProvider.GetDefaultPolicyAsync();
+        public Task<AuthorizationPolicy> GetFallbackPolicyAsync() => FallbackPolicyProvider.GetFallbackPolicyAsync();
 
     }
 }

@@ -7,13 +7,14 @@ using Microsoft.Extensions.Options;
 
 namespace AspNetCoreIdentity.Infrastructure.Authorizations
 {
-    public class StreamingCategoryPolicyProvider : IAuthorizationPolicyProvider
+    public class StreamingCategoryPolicyProvider2 : IAuthorizationPolicyProvider
     {
         const string POLICY_PREFIX = "StreamingCategory_";
 
         public DefaultAuthorizationPolicyProvider FallbackPolicyProvider { get; }
 
-        public StreamingCategoryPolicyProvider(IOptions<AuthorizationOptions> options)
+
+        public StreamingCategoryPolicyProvider2(IOptions<AuthorizationOptions> options)
         {
             // ASP.NET Core only uses one authorization policy provider, so if the custom implementation
             // doesn't handle all policies (including default policies, etc.) it should fall back to an
@@ -26,21 +27,31 @@ namespace AspNetCoreIdentity.Infrastructure.Authorizations
             // If a custom policy provider is able to handle all expected policy names then, of course, this
             // fallback pattern is unnecessary.
 
-            // Claims based authorization
-            options.Value.AddPolicy("TrialOnly", policy => {
-                policy.RequireClaim("Trial");
-            });
+
+            //自定义用户无法提供策略的情况下如何应用默认授权提供者
+
+            //Claims based authorization
+            //options.Value.AddPolicy("TrialOnly", policy =>
+            //{
+            //    policy.RequireClaim("Trial");
+            //});
 
             // Role based authorization
-            options.Value.AddPolicy("AdminOnly", policy => {
+            options.Value.AddPolicy("AdminOnly", policy =>
+            {
                 policy.RequireRole("Admin");
             });
 
             options.Value.AddPolicy("AddVideoPolicy", policy =>
-                policy.Requirements.Add(new UserCategoryRequirement()));
+            policy.Requirements.Add(new UserCategoryRequirement()));
 
             FallbackPolicyProvider = new DefaultAuthorizationPolicyProvider(options);
         }
+
+        public Task<AuthorizationPolicy> GetDefaultPolicyAsync() => FallbackPolicyProvider.GetDefaultPolicyAsync();
+
+        public Task<AuthorizationPolicy> GetFallbackPolicyAsync() => FallbackPolicyProvider.GetFallbackPolicyAsync();
+
 
         public Task<AuthorizationPolicy> GetPolicyAsync(string policyName)
         {
@@ -61,10 +72,5 @@ namespace AspNetCoreIdentity.Infrastructure.Authorizations
                 return FallbackPolicyProvider.GetPolicyAsync(policyName);
             }
         }
-
-        public Task<AuthorizationPolicy> GetDefaultPolicyAsync() => FallbackPolicyProvider.GetDefaultPolicyAsync();
-
-        public Task<AuthorizationPolicy> GetFallbackPolicyAsync() => FallbackPolicyProvider.GetFallbackPolicyAsync();
-
     }
 }
