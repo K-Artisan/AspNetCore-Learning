@@ -10,10 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 
-namespace Api
+namespace SocialNetwork.API
 {
     public class Startup
     {
@@ -27,26 +25,19 @@ namespace Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
-
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api", Version = "v1" });
-            });
+            services.AddAuthorization();
 
             services.AddAuthentication("Bearer")
-                    .AddJwtBearer("Bearer", options =>
-                    {
-                        options.Authority = "https://localhost:5001";
+              .AddJwtBearer("Bearer", options =>
+              {
+                  options.Authority = "http://localhost:5005";
+                  options.RequireHttpsMetadata = false;
 
-                        options.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            ValidateAudience = false
-                        };
+                  //必须与我们之前定义的API资源名称相匹配
+                  options.Audience = "SocialAPI";
+              });
 
-                        //options.Audience = "API 1";
-                    });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,15 +46,11 @@ namespace Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Api v1"));
             }
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
-
             app.UseAuthentication();
             app.UseAuthorization();
 

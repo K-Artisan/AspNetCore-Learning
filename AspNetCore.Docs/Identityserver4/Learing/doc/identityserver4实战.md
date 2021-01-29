@@ -10,6 +10,8 @@
 
 [IdentityServer4 中文文档与实战（添加了PPT资料）](https://www.cnblogs.com/stulzq/p/8119928.html)
 
+[OAuth 2.0, OpenID Connect & IdentityServer](https://chsakell.com/2019/03/11/asp-net-core-identity-series-oauth-2-0-openid-connect-identityserver/)
+
 
 
 ### OpenId
@@ -293,6 +295,12 @@ ASP.NET Core 认证与授权：JwtBearer认证
 
 
 ### OAuth2.0 授权模式
+
+参考资料：
+
+[OAuth 2.0, OpenID Connect & IdentityServer](https://chsakell.com/2019/03/11/asp-net-core-identity-series-oauth-2-0-openid-connect-identityserver/)
+
+
 
 OAuth2.0 定义了四种授权模式：
 
@@ -1128,7 +1136,7 @@ namespace Client
 相比，多了一个包含唯一标识用户的`sub` claim
 
 ```json
- "sub": "1",
+ "sub": "SubjectId-1",
 ```
 
 该信息是用户的唯一标识。sub 信息可以在调用 API 后通过检查内容变量来被查看，并且也将被控制台应用程序显示到屏幕上,如下所示：
@@ -1174,3 +1182,22 @@ Authentication Methods References. JSON array of strings that are identifiers fo
 
 [IdentityServer4（9）- 使用OpenID Connect添加用户身份验证（implicit)](https://www.cnblogs.com/stulzq/p/7797341.html)
 
+[OAuth 2.0, OpenID Connect & IdentityServer](https://chsakell.com/2019/03/11/asp-net-core-identity-series-oauth-2-0-openid-connect-identityserver/)
+
+> 在描述OAuth 2.0时，我们说过它的目的是发布访问令牌，以提供对受保护资源的有限**访问权限**，换句话说，OAuth 2.0提供**授权，**但不提供身份验证。实际用户永远不会直接与客户端应用程序本身进行身份验证。访问令牌提供了一个`pseudo-authentication`完全没有身份隐含的级别。伪身份验证不提供有关身份验证的时间，地点或方式的信息。在此`OpenID Connect`输入并填补OAuth 2.0中的身份验证空白或限制。
+> `OpenID Connect`是OAuth 2.0协议之上的简单身份层。它使客户端可以根据授权服务器执行的身份验证来验证最终用户的身份。它以可互操作且类似于REST的方式*（引入新的REST端点）*获取有关最终​​用户的基本配置文件信息。它使用**Claims**传达有关最终用户的信息，并以基于云的应用程序可以以下方式扩展OAuth：
+>
+> - 获取身份信息
+> - 检索有关身份验证事件的详细信息
+> - 允许联合单点登录
+>
+> 让我们看看OpenID Connect中使用的基本术语。
+>
+> 1. **最终用户**：人类参与者–在OAuth中，它是指拥有资源作为其受保护资源之一的资源所有者
+> 2. **依赖方**：OAuth 2.0客户端应用程序。需要最终用户身份验证和来自OpenID提供程序的声明
+> 3. **身份提供者**：OAuth 2.0授权服务器，用于对最终用户进行身份验证，并向依赖方提供有关身份验证事件和最终用户的声明
+> 4. **身份令牌**：**JSON Web令牌（JWT），**其中包含有关身份验证事件的声明。它还可能包含其他声明
+
+
+
+ 由于OpenID Connect位于OAuth 2.0之上，因此，如果我们说它使用了某些OAuth 2.0流程，就很有意义。实际上，OpenID Connect可以遵循以下`Authorization Code`流程，“`Implicit`和”`Hybrid`（前两个的组合）。流程完全相同，唯一的区别是**id_token**与**access_token**一起发出。**该流是纯OAuth 2.0还是OpenID Connect，取决于授权请求中的openid范围是否存在。** 
