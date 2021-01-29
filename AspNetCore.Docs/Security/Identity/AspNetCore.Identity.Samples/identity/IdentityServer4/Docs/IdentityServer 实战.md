@@ -256,8 +256,7 @@ http://localhost:5010/api/contacts
   不知道，反正使用PLAN就不行
 
   https://blog.csdn.net/weixin_34415923/article/details/89691037
-   
-
+  
 -  Code Verifier 
 
   参见：https://blog.csdn.net/weixin_34415923/article/details/89691037
@@ -310,12 +309,18 @@ http://localhost:5010/api/contacts
 
   $AspNetIdentity10$
 
+  ![1611947137532](images/IdentityServer%20%E5%AE%9E%E6%88%98/1611947137532.png)
+
+  点击【Yes, Allow】,
+
+  ![1611935377362](images/IdentityServer%20%E5%AE%9E%E6%88%98/1611935377362.png)
+
   ![1611941969930](images/IdentityServer%20%E5%AE%9E%E6%88%98/1611941969930.png)
-
+  
   看到返回的信息
-
+  
   包括：
-
+  
   
 
 ![1611942027695](images/IdentityServer%20%E5%AE%9E%E6%88%98/1611942027695.png)
@@ -560,3 +565,79 @@ SELECT * FROM [IdentityServerDb].[dbo].[AspNetUserClaims];
 有个管理授权页面：
 
 Revoke Access： 撤销访问 
+
+
+
+#### 授权存储
+
+授权记录是存储在[IdentityServerDb].[dbo].[PersistedGrants]中
+
+```sql
+SELECT TOP 1000 [Key]
+      ,[Type]
+      ,[SubjectId]
+      ,[ClientId]
+      ,[CreationTime]
+      ,[Expiration]
+      ,[Data]
+  FROM [IdentityServerDb].[dbo].[PersistedGrants]
+```
+
+![1611946488866](images/IdentityServer%20%E5%AE%9E%E6%88%98/1611946488866.png)
+
+其中，Data列的值为：
+
+```json
+{
+  "SubjectId": "a47f48e9-1818-46fd-a2e0-b09e95d43977",
+  "ClientId": "AspNetCoreIdentity",
+  "Scopes": [
+    "openid",
+    "profile",
+    "SocialAPI"
+  ],
+  "CreationTime": "2021-01-29T15:47:29Z",
+  "Expiration": null
+}
+```
+
+点击【Revoke Access】取消授权后，这行数据会被删除：
+
+![1611946593360](images/IdentityServer%20%E5%AE%9E%E6%88%98/1611946593360.png)
+
+奇怪的是，取消授权后，使用**未过期的access_token**，能继续访问受保护API，意思是，取消授权对已经授权的access_token爱莫能助。
+
+#### 重新授权
+
+取消授权后，可重新获取授权，流程跟之前一样，账号密码登录，确认授权，
+
+http://localhost:5005/Grants
+
+![1611947541337](images/IdentityServer%20%E5%AE%9E%E6%88%98/1611947541337.png)
+
+
+
+数据库又有了授权记录
+
+![1611947390914](images/IdentityServer%20%E5%AE%9E%E6%88%98/1611947390914.png)
+
+其中，Data列的值为：
+
+```json
+{
+  "SubjectId": "a47f48e9-1818-46fd-a2e0-b09e95d43977",
+  "ClientId": "AspNetCoreIdentity",
+  "Scopes": [
+    "openid",
+    "profile",
+    "SocialAPI"
+  ],
+  "CreationTime": "2021-01-29T19:06:07Z",
+  "Expiration": null
+}
+```
+
+
+
+**存疑**：Key和SubjectId两次授权后都是一样的，为何？
+
