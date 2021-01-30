@@ -31,7 +31,7 @@ namespace AspNetCoreIdentity.Controllers
             return View("../Home/Index");
         }
 
-        [HttpGet]
+        [HttpPost]
         public IActionResult Login(string provider, string returnUrl = null)
         {
             var redirectUrl = Url.Action("Callback", "SocialAccount");
@@ -66,8 +66,14 @@ namespace AspNetCoreIdentity.Controllers
 
             if (string.IsNullOrEmpty(userEmail))
             {
-                return LocalRedirect(
-                    $"{returnUrl}?message=Email scope access is required to add {info.ProviderDisplayName} provider&type=danger");
+                //return LocalRedirect(
+                //    $"{returnUrl}?message=Email scope access is required to add {info.ProviderDisplayName} provider&type=danger");
+
+                ViewBag.ErrorTitle = "登录失败";
+                ViewBag.ErrorMessage = $"Email scope access is required to add {info.ProviderDisplayName} provider&type=danger";
+
+                return View("Remind");
+
             }
 
             var userDb = await _userManager.FindByEmailAsync(userEmail);
@@ -75,6 +81,7 @@ namespace AspNetCoreIdentity.Controllers
             if (userDb != null)
             {
                 // RULE #5
+                //由外部提供商认证的用户，但拥有与未确认电子邮件地址相同的现有帐户，则必须确认关联，该关联最终也会自动确认现有帐户。
                 if (!userDb.EmailConfirmed)
                 {
                     var token = await _userManager.GenerateEmailConfirmationTokenAsync(userDb);
@@ -90,8 +97,8 @@ namespace AspNetCoreIdentity.Controllers
                         },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(userDb.Email, $"Confirm {info.ProviderDisplayName} external login",
-                        $"Please confirm association of your {info.ProviderDisplayName} account by clicking <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>here</a>.");
+                    //await _emailSender.SendEmailAsync(userDb.Email, $"Confirm {info.ProviderDisplayName} external login",
+                    //    $"Please confirm association of your {info.ProviderDisplayName} account by clicking <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>here</a>.");
 
                     return LocalRedirect(
                         $"{returnUrl}?message=External account association with {info.ProviderDisplayName} is pending.Please check your email");
@@ -103,10 +110,37 @@ namespace AspNetCoreIdentity.Controllers
                 await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey,
                    isPersistent: false, bypassTwoFactor: true);
 
-                return LocalRedirect(
-                    $"{returnUrl}?message={info.ProviderDisplayName} has been added successfully");
-            }
+                //return LocalRedirect(
+                //    $"{returnUrl}?message={info.ProviderDisplayName} has been added successfully");
 
+                return LocalRedirect(returnUrl);
+            }
+            //else //创建一个新用户策略
+            //{
+
+            //    var user = new IdentityUser
+            //    {
+            //        UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
+            //        Email = info.Principal.FindFirstValue(ClaimTypes.Email)
+            //    };
+            //    //如果不存在，则创建一个用户，但是这个用户没有密码。
+            //    await _userManager.CreateAsync(user);
+
+            //    //生成电子邮件确认令牌
+            //    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            //    //生成电子邮件的确认链接
+            //    var confirmationLink = Url.Action("ConfirmEmail", "Account",
+            //    new { userId = user.Id, token = token }, Request.Scheme);
+            //    //需要注入ILogger<AccountController> _logger;服务，记录生成的URL链接
+            //    //_logger.Log(LogLevel.Warning, confirmationLink);
+            //    ViewBag.ErrorTitle = "注册成功";
+            //    ViewBag.ErrorMessage = $"在你登入系统前,我们已经给您发了一份邮件，需要您先进行邮件验证，点击确认链接即可完成。<br/> 也可以点这里进行邮箱确认{confirmationLink}";
+                
+            //    return View("Remind");
+            //}
+
+            //绑定账号策略
             return LocalRedirect($"/register?associate={userEmail}&loginProvider={info.LoginProvider}&providerDisplayName={info.ProviderDisplayName}&providerKey={info.ProviderKey}");
 
         }
