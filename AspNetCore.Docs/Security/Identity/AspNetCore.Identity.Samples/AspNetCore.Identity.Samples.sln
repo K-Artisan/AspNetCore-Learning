@@ -23,9 +23,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCoreIdentity-4", "ide
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer", "identity\IdentityServer4\IdentityServer\IdentityServer.csproj", "{13211568-4AA8-4335-A589-44E1ABB3065B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetwork.API", "identity\IdentityServer4\SocialNetwork.API\SocialNetwork.API.csproj", "{E61B9C51-36E2-4AA9-B41E-3392D7205439}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialNetwork.API", "identity\IdentityServer4\SocialNetwork.API\SocialNetwork.API.csproj", "{E61B9C51-36E2-4AA9-B41E-3392D7205439}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCoreIdentity-5", "identity\AspNetCoreIdentity-5\AspNetCoreIdentity-5.csproj", "{4C0D15C6-FE5E-4473-A721-39C187FAA406}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCoreIdentity-6", "identity\AspNetCoreIdentity-6\AspNetCoreIdentity-6.csproj", "{21A9266E-BE04-4721-950E-02006BF8F6BB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +75,10 @@ Global
 		{4C0D15C6-FE5E-4473-A721-39C187FAA406}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C0D15C6-FE5E-4473-A721-39C187FAA406}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C0D15C6-FE5E-4473-A721-39C187FAA406}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21A9266E-BE04-4721-950E-02006BF8F6BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21A9266E-BE04-4721-950E-02006BF8F6BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21A9266E-BE04-4721-950E-02006BF8F6BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21A9266E-BE04-4721-950E-02006BF8F6BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -86,6 +92,7 @@ Global
 		{13211568-4AA8-4335-A589-44E1ABB3065B} = {FF7A046D-F803-49C4-8E23-3CA654C6DE9D}
 		{E61B9C51-36E2-4AA9-B41E-3392D7205439} = {FF7A046D-F803-49C4-8E23-3CA654C6DE9D}
 		{4C0D15C6-FE5E-4473-A721-39C187FAA406} = {CB4686F8-EC76-4917-923C-E3A29B5E4BD3}
+		{21A9266E-BE04-4721-950E-02006BF8F6BB} = {CB4686F8-EC76-4917-923C-E3A29B5E4BD3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {143FCCAE-888B-4F45-BE3A-B82EC5F8544A}
